@@ -4,6 +4,8 @@ import kentico.kontent.delivery.DeliveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutionException;
+
 @RestController
 public class TestController {
 
@@ -14,7 +16,7 @@ public class TestController {
     }
 
     @GetMapping("/test")
-    public String test() {
-        return deliveryClient.getItem("article_a").getItem().toString();
+    public String test() throws ExecutionException, InterruptedException {
+        return deliveryClient.getItem("article_a").toCompletableFuture().get().getItem().toString();
     }
 }
