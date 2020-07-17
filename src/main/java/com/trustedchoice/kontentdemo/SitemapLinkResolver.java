@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class SitemapLinkResolver implements ContentLinkUrlResolver {
 
@@ -26,11 +27,20 @@ public class SitemapLinkResolver implements ContentLinkUrlResolver {
                 .projection("url")
                 .build();
 
-        final ContentItem item = deliveryClient.getItem(codename, params).getItem();
-        final String urlSlug = ((UrlSlugElement) item.getElements().get("url")).getValue();
+        ContentItem item = null;
+        try {
+            item = deliveryClient.getItem(codename, params).toCompletableFuture().get().getItem();
+            final String urlSlug = ((UrlSlugElement) item.getElements().get("url")).getValue();
 
-        LOG.debug("Resolved link: {} for codename: {}", urlSlug, codename);
+            LOG.debug("Resolved link: {} for codename: {}", urlSlug, codename);
 
-        return urlSlug;
+            return urlSlug;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return "error";
     }
 }

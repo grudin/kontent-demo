@@ -10,11 +10,17 @@ sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
+
+    maven {
+        url "https://dl.bintray.com/simply007/kontent-java-monorepo"
+    }
+
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.github.kentico:kontent-delivery:3.2.0'
+    // implementation 'com.github.kentico:kontent-delivery:3.2.0'
+    implementation 'com.github.simply007:kontent-delivery:0.0.2-beta.8'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
